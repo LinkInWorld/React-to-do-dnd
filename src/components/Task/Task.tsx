@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {toast} from "react-toastify";
 import {useDrag} from "react-dnd";
+import styles from './style.module.scss';
 
 interface ITask{
     task: any,
@@ -28,7 +29,7 @@ const Task: FC <ITask> = ({task, tasks, setTasks }) => {
         <div ref={drag} className={`relative p-4 mt-8 shadow-md ${isDragging ? "opacity-25" : "opacity-100"} rounded-md cursor-grab`}>
             <p>{task.name}</p>
             <button
-                className="absolute bottom-1 right-1 text-slate-400"
+                className={styles.buttonDelete}
                 onClick={() => handleRemove(task.id)}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}

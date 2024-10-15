@@ -3,14 +3,15 @@ import HeaderSection from "./HeaderSection";
 import Task from "./Task";
 import {useDrop} from "react-dnd";
 import {toast} from "react-toastify";
+import {ITask} from "../models/ITask";
 
 interface ISectionList{
     status: string,
-    tasks: any,
+    tasks: ITask[],
     setTasks: (value: any) => any,
-    todos: any,
-    inProgress: any,
-    closed : any,
+    todos: ITask[],
+    inProgress: ITask[],
+    closed : ITask[],
 }
 
 const SectionList: FC <ISectionList> = ({status , tasks, setTasks, todos, inProgress, closed}) => {
@@ -19,27 +20,36 @@ const SectionList: FC <ISectionList> = ({status , tasks, setTasks, todos, inProg
     const [tasksToMap, setTasksToMap] = useState(todos);
 
     useEffect(() => {
-        if(status === "todo"){
-            setText('Новые');
-            setColor('bg-gray-500');
-            setTasksToMap(todos);
-        }else if(status === "inprogress"){
-            setText('В работе');
-            setColor('bg-orange-500');
-            setTasksToMap(inProgress);
-
-        }else if(status === "closed"){
-            setText('Завершенные');
-            setColor('bg-green-500');
-            setTasksToMap(closed);
+        switch (status) {
+            case 'todo': {
+                setText('Новые');
+                setColor('bg-gray-500');
+                setTasksToMap(todos);
+                break;
+            }
+            case 'inprogress': {
+                setText('В работе');
+                setColor('bg-orange-500');
+                setTasksToMap(inProgress);
+                break;
+            }
+            case 'closed': {
+                setText('Завершенные');
+                setColor('bg-green-500');
+                setTasksToMap(closed);
+                break
+            }
+            default: {
+                toast.error(`Статус задачи не найден ${status}`);
+            }
         }
-    },[todos, inProgress, closed])
+    },[todos, inProgress, closed, status])
 
     const [{isOver}, drop] = useDrop(() => ({
         accept: "task",
         drop: (item: any) => addItemToSection(item.id),
         collect: (monitor) => ({
-            isOver: !!monitor.isOver()
+            isOver: monitor.isOver()
         })
     }))
 
@@ -61,9 +71,11 @@ const SectionList: FC <ISectionList> = ({status , tasks, setTasks, todos, inProg
 
     return (
         <div ref={drop} className={`w-64 mt-5 p-2 rounded-md min-h-60 ${isOver ? "bg-slate-200" : ""}`}>
-            <HeaderSection text={text} bg={color} count={5} />
-            {tasksToMap.map((task: any) => <Task key={task.id} task={task} tasks={tasks}
-                                                                          setTasks={(value: any) => setTasks(value)}></Task>)}
+            <HeaderSection text={text} bg={color} count={tasksToMap.length} />
+            {
+                tasksToMap.map((task) => <Task key={task.id} task={task} tasks={tasks}
+                                                                          setTasks={(value: any) => setTasks(value)}></Task>)
+            }
 
         </div>
     );

@@ -3,18 +3,19 @@ import CreateTask from "./components/Task/CreateTask";
 import ListTasks from "./components/Task/ListTasks";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {ITask} from "./components/models/ITask";
 
 function App() {
-    const [tasks, setTasks] = useState<any>([]);
+    const [tasks, setTasks] = useState<ITask[]>([]);
 
     useEffect(() => {
         setTasks(JSON.parse(localStorage.getItem("tasks") ?? ''));
     }, [])
 
-    const addTask = (task: {id: string, name: string, status: string}) => {
-      setTasks((tasks: any) => {
+    const addTask = (task: ITask) => {
+      setTasks((tasks) => {
           const list = [...tasks, task];
 
           localStorage.setItem("tasks", JSON.stringify(list));
@@ -27,9 +28,9 @@ function App() {
   return (
       <DndProvider backend={HTML5Backend}>
         <div className="border-gray-100 w-screen h-screen flex flex-col items-center">
-        <CreateTask addTask={addTask}/>
-        <ListTasks tasks={tasks} setTasks={(value: any) => setTasks(value)}/>
-        <ToastContainer position="bottom-right" />
+            <CreateTask addTask={addTask}/>
+            <ListTasks tasks={tasks} setTasks={(value) => setTasks(value)}/>
+            <ToastContainer position="bottom-right" />
         </div>
       </DndProvider>
   );

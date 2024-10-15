@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import styles from './style.module.scss';
 
 interface IHeaderSection{
     text: string,
@@ -7,7 +8,7 @@ interface IHeaderSection{
 }
 const HeaderSection: FC <IHeaderSection> = ({text, bg, count}) => {
     return (
-        <div className={`${bg} flex items-center gap-2 h-12 pl-4 text-white text-sm rounded-md uppercase`}>
+        <div className={`${bg} ` + styles.headerSection}>
             {text}
             <div>
                 {count}
